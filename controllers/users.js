@@ -35,7 +35,7 @@ module.exports.updateUser = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .orFail(new Error('NotFound'))
-    .then((user) => res.status(SUCCESS_OK).send(user)) // { data: user }
+    .then((user) => res.status(SUCCESS_OK).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Переданы некорректные данные при обновлении аватара');
