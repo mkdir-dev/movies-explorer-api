@@ -1,6 +1,14 @@
 const User = require('../models/user');
 
-module.exports.getUserInfo = (req, res, next) => {
+const NotFoundError = require('../errors/404 - NotFoundError');
+const BadRequestError = require('../errors/400 - BadRequestError');
+const InternalServerError = require('../errors/500 - InternalServerError');
+
+const {
+  SUCCESS_OK,
+} = require('../errors/errorStatuses');
+
+module.exports.getUser = (req, res, next) => {
   User.findById(req.user._id)
     .orFail(new Error('NotFound'))
     .then((user) => res.status(SUCCESS_OK).send({ user }))
