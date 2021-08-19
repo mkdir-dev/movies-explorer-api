@@ -1,6 +1,8 @@
 const Movie = require('../models/movie');
 
 const BadRequestError = require('../errors/400 - BadRequestError');
+const ForbiddenError = require('../errors/403 - ForbiddenError');
+const NotFoundError = require('../errors/404 - NotFoundError');
 const InternalServerError = require('../errors/500 - InternalServerError');
 
 const {
@@ -49,6 +51,34 @@ module.exports.createMovies = (req, res, next) => {
         throw new BadRequestError('Ошибка валидации при создании фильма');
       } else if (err.name === 'CastError') {
         throw new BadRequestError('Переданы некорректные данные при создании фильма');
+      }
+      throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+    })
+    .catch(next);
+};
+
+module.exports.deleteMovies = (req, res, next) => {
+  const { movieId } = req.params;
+  const userId = req.user._id;
+
+  Movie.findById(movieId)
+    .orFail(new Error('NotFound'))
+    .then((movie) => {
+      if (movie.owner.toString() === userId) {
+        Movie.findByIdAndRemove(movieId)
+          .then(() => res.status(SUCCESS_OK).send({
+            message: 'Удаление фильма прошло успешно',
+          }));
+      } else {
+        throw new ForbiddenError('Вы не можете удалять чужие фильмы');
+      }
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        throw new BadRequestError('Переданы некорректные данные при удалении фильма');
+      }
+      if (err.message === 'NotFound') {
+        throw new NotFoundError('Запрашиваемый фильм пользователя не найден');
       }
       throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
     })
