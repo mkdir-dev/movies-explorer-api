@@ -16,5 +16,11 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log(`App listening on port ${PORT}`)
-})
+  console.log(`App listening on port ${PORT}`);
+});
+
+/*
+GET /movies
+POST /movies
+DELETE /movies/movieId
+*/
