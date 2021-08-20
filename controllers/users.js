@@ -1,12 +1,15 @@
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
 
-const NotFoundError = require('../errors/404 - NotFoundError');
 const BadRequestError = require('../errors/400 - BadRequestError');
-const InternalServerError = require('../errors/500 - InternalServerError');
+const UnauthorizedError = require('../errors/401 - UnauthorizedError');
+const NotFoundError = require('../errors/404 - NotFoundError');
 const ConflictError = require('../errors/409 - ConflictError');
+const InternalServerError = require('../errors/500 - InternalServerError');
+
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const {
   SUCCESS_OK,
@@ -53,8 +56,6 @@ module.exports.updateUser = (req, res, next) => {
 };
 
 // создать пользователя с переданными в теле
-// email, password и name
-// POST /signup
 module.exports.createUser = (req, res, next) => {
   const { email, password, name } = req.body;
 
@@ -81,6 +82,24 @@ module.exports.createUser = (req, res, next) => {
     .catch(next);
 };
 
-// проверяет переданные в теле почту и пароль
-// и возвращает JWT
-// POST /signin
+// проверить переданные в теле почту и пароль и вернуть JWT
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      // создать токен
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+
+      // вернуть токен
+      return res.send({ token });
+    })
+    .catch(() => {
+      throw new UnauthorizedError('Ошибка аутентификации');
+    })
+    .catch(next);
+};
