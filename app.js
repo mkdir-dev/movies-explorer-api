@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const { login, createUser } = require('./controllers/users');
 
+const auth = require('./middlewares/auth');
 const usersRoutes = require('./routes/users');
 const moviesRoutes = require('./routes/movies');
 
@@ -22,7 +23,7 @@ app.use('/', express.json());
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-app.use('/users', usersRoutes);
-app.use('/movies', moviesRoutes);
+app.use('/users', auth, usersRoutes);
+app.use('/movies', auth, moviesRoutes);
 
 app.listen(PORT);

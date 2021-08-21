@@ -17,9 +17,9 @@ const {
 
 // вернуть информацию о пользователе (email и имя)
 module.exports.getUser = (req, res, next) => {
-  User.findById(req.user._id)
+  User.findById(req.user)
     .orFail(new Error('NotFound'))
-    .then((user) => res.status(SUCCESS_OK).send({ user }))
+    .then((user) => res.status(SUCCESS_OK).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Переданы некорректные данные пользователя');
@@ -42,7 +42,7 @@ module.exports.updateUser = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .orFail(new Error('NotFound'))
-    .then((user) => res.status(SUCCESS_OK).send({ user }))
+    .then((user) => res.status(SUCCESS_OK).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Переданы некорректные данные при обновлении аватара');
