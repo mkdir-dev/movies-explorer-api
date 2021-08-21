@@ -8,7 +8,6 @@ const usersRoutes = require('./routes/users');
 const moviesRoutes = require('./routes/movies');
 
 const { PORT = 3000 } = process.env;
-
 const app = express();
 
 mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
@@ -17,6 +16,8 @@ mongoose.connect('mongodb://localhost:27017/bitfilmsdb', {
   useCreateIndex: true,
   useFindAndModify: false,
 });
+
+app.use('/', express.json());
 
 app.post('/signin', login);
 app.post('/signup', createUser);
