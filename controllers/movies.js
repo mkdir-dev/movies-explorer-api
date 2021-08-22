@@ -13,7 +13,7 @@ const {
 module.exports.getMovies = (req, res, next) => {
   Movie.find({})
     .orFail(new Error('NotFound'))
-    .then((movies) => res.status(SUCCESS_OK).send({ movies }))
+    .then((movies) => res.status(SUCCESS_OK).send(movies))
     .catch((err) => {
       if (err.name === 'CastError') {
         throw new BadRequestError('Переданы некорректные данные');
@@ -44,8 +44,7 @@ module.exports.createMovies = (req, res, next) => {
     movieId,
     owner: req.user._id,
   })
-    .orFail(new Error('NotFound'))
-    .then((movie) => res.status(SUCCESS_OK).send({ movie }))
+    .then((movie) => res.status(SUCCESS_OK).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new BadRequestError('Ошибка валидации при создании фильма');
@@ -57,12 +56,12 @@ module.exports.createMovies = (req, res, next) => {
     .catch(next);
 };
 
+// удалить сохранённый фильм по id
 module.exports.deleteMovies = (req, res, next) => {
   const { movieId } = req.params;
   const userId = req.user._id;
 
   Movie.findById(movieId)
-    .orFail(new Error('NotFound'))
     .then((movie) => {
       if (movie.owner.toString() === userId) {
         Movie.findByIdAndRemove(movieId)
