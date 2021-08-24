@@ -75,14 +75,8 @@ module.exports.deleteMovies = (req, res, next) => {
         throw new ForbiddenError(movieErr.ForbiddenError);
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        throw new BadRequestError(movieErr.BadRequestError);
-      }
-      if (err.message === 'NotFound') {
-        throw new NotFoundError(movieErr.NotFoundError);
-      }
-      throw new InternalServerError(serverErr.InternalServerError);
+    .catch(() => {
+      throw new NotFoundError(movieErr.NotFoundError);
     })
     .catch(next);
 };
