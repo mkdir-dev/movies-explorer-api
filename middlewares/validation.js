@@ -1,11 +1,13 @@
 const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 
+const { validErr } = require('../errors/errorMessages');
+
 const verifyUrl = (value) => {
   if (validator.isURL(value, { require_protocol: true })) {
     return value;
   }
-  return value.message('Неверный URL-адрес');
+  return value.message(validErr.urlErr);
 };
 
 module.exports.signinValidation = celebrate({

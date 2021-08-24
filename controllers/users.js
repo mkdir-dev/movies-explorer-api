@@ -9,6 +9,8 @@ const NotFoundError = require('../errors/404 - NotFoundError');
 const ConflictError = require('../errors/409 - ConflictError');
 const InternalServerError = require('../errors/500 - InternalServerError');
 
+const { userErr, authErr, serverErr } = require('../errors/errorMessages');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
 const {
@@ -22,12 +24,12 @@ module.exports.getUser = (req, res, next) => {
     .then((user) => res.status(SUCCESS_OK).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные пользователя');
+        throw new BadRequestError(userErr.BadRequestError);
       }
       if (err.message === 'NotFound') {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(userErr.NotFoundError);
       }
-      throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+      throw new InternalServerError(serverErr.InternalServerError);
     })
     .catch(next);
 };
@@ -45,12 +47,12 @@ module.exports.updateUser = (req, res, next) => {
     .then((user) => res.status(SUCCESS_OK).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные при обновлении аватара');
+        throw new BadRequestError(userErr.BadRequestError);
       }
       if (err.message === 'NotFound') {
-        throw new NotFoundError('Запрашиваемый пользователь не найден');
+        throw new NotFoundError(userErr.NotFoundError);
       }
-      throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+      throw new InternalServerError(serverErr.InternalServerError);
     })
     .catch(next);
 };
@@ -70,14 +72,14 @@ module.exports.createUser = (req, res, next) => {
       }))
       .catch((err) => {
         if (err.name === 'ValidationError') {
-          throw new BadRequestError('Ошибка валидации при создании пользователя');
+          throw new BadRequestError(userErr.ValidationError);
         } else if (err.name === 'CastError') {
-          throw new BadRequestError('Переданы некорректные данные при создании пользователя');
+          throw new BadRequestError(userErr.BadRequestError);
         }
         if (err.name === 'MongoError' && err.code === 11000) {
-          throw new ConflictError('Пользователь с таким Email уже зарегистрирован');
+          throw new ConflictError(userErr.ConflictError);
         }
-        throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+        throw new InternalServerError(serverErr.InternalServerError);
       }))
     .catch(next);
 };
@@ -97,7 +99,7 @@ module.exports.login = (req, res, next) => {
       return res.send({ token });
     })
     .catch(() => {
-      throw new UnauthorizedError('Ошибка аутентификации');
+      throw new UnauthorizedError(authErr.UnauthorizedError);
     })
     .catch(next);
 };

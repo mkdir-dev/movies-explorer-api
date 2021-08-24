@@ -1,9 +1,12 @@
+const ERROR_SERVER = require('../errors/errorStatuses');
+const { serverErr } = require('../errors/errorMessages');
+
 module.exports.handleErr = (err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  const { statusCode = ERROR_SERVER, message } = err;
 
   res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На сервере произошла ошибка'
+    message: statusCode === ERROR_SERVER
+      ? serverErr.ServerError
       : message,
   });
 

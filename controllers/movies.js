@@ -5,6 +5,9 @@ const ForbiddenError = require('../errors/403 - ForbiddenError');
 const NotFoundError = require('../errors/404 - NotFoundError');
 const InternalServerError = require('../errors/500 - InternalServerError');
 
+const { movieErr, serverErr } = require('../errors/errorMessages');
+const { messages } = require('../utils/constants');
+
 const {
   SUCCESS_OK,
 } = require('../errors/errorStatuses');
@@ -16,9 +19,9 @@ module.exports.getMovies = (req, res, next) => {
     .then((movies) => res.status(SUCCESS_OK).send(movies))
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные');
+        throw new BadRequestError(movieErr.BadRequestError);
       }
-      throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+      throw new InternalServerError(serverErr.InternalServerError);
     })
     .catch(next);
 };
@@ -47,11 +50,11 @@ module.exports.createMovies = (req, res, next) => {
     .then((movie) => res.status(SUCCESS_OK).send(movie))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        throw new BadRequestError('Ошибка валидации при создании фильма');
+        throw new BadRequestError(movieErr.ValidationError);
       } else if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные при создании фильма');
+        throw new BadRequestError(movieErr.BadRequestError);
       }
-      throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+      throw new InternalServerError(serverErr.InternalServerError);
     })
     .catch(next);
 };
@@ -66,20 +69,20 @@ module.exports.deleteMovies = (req, res, next) => {
       if (movie.owner.toString() === userId) {
         Movie.findByIdAndRemove(movieId)
           .then(() => res.status(SUCCESS_OK).send({
-            message: 'Удаление фильма прошло успешно',
+            message: messages.deletedMovie,
           }));
       } else {
-        throw new ForbiddenError('Вы не можете удалять чужие фильмы');
+        throw new ForbiddenError(movieErr.ForbiddenError);
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        throw new BadRequestError('Переданы некорректные данные при удалении фильма');
+        throw new BadRequestError(movieErr.BadRequestError);
       }
       if (err.message === 'NotFound') {
-        throw new NotFoundError('Запрашиваемый фильм пользователя не найден');
+        throw new NotFoundError(movieErr.NotFoundError);
       }
-      throw new InternalServerError('Ошибка сервера. Ошибка по-умолчанию');
+      throw new InternalServerError(serverErr.InternalServerError);
     })
     .catch(next);
 };

@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+const validator = (value) => /https?:\/\/[w{3}.]?[\S^а-яё]/gi.test(value);
+const { movieValidErr } = require('../errors/errorMessages');
+
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -25,30 +28,24 @@ const movieSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(value) {
-        return /https?:\/\/[w{3}.]?[\S^а-яё]/gi.test(value);
-      },
-      message: 'Неверная ссылка на постер к фильму',
+      validator,
+      message: movieValidErr.urlErrImage,
     },
   },
   trailer: {
     type: String,
     required: true,
     validate: {
-      validator(value) {
-        return /https?:\/\/[w{3}.]?[\S^а-яё]/gi.test(value);
-      },
-      message: 'Неверная ссылка на трейлер фильма',
+      validator,
+      message: movieValidErr.urlErrTrailer,
     },
   },
   thumbnail: {
     type: String,
     required: true,
     validate: {
-      validator(value) {
-        return /https?:\/\/[w{3}.]?[\S^а-яё]/gi.test(value);
-      },
-      message: 'Неверная ссылка на миниатюрное изображение постера к фильму',
+      validator,
+      message: movieValidErr.urlErrThumbnail,
     },
   },
   owner: {

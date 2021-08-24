@@ -9,3 +9,7 @@ module.exports.SETUP_DB = {
   useCreateIndex: true,
   useFindAndModify: false,
 };
+
+module.exports.messages = {
+  deletedMovie: 'Удаление фильма прошло успешно',
+};
