@@ -1,5 +1,5 @@
 const { NODE_ENV, PROD_DB } = process.env;
-const DEV_DB = 'mongodb://localhost:27017/bitfilmsdb';
+const DEV_DB = 'mongodb://localhost:27017/moviesdb';
 
 module.exports.URL_DB = NODE_ENV === 'production' ? PROD_DB : DEV_DB;
 
