@@ -1,9 +1,9 @@
 # movies-explorer-api
 
 ## Стек технологий:
-* ![Node.js](https://img.shields.io/badge/-Node.js-090909?style=for-the-badge&logo=Node.js)
-* ![Express.js](https://img.shields.io/badge/-Express.js-090909?style=for-the-badge&logo=Express)
-* ![MongoDB](https://img.shields.io/badge/-MongoDB-090909?style=for-the-badge&logo=MongoDB)
+![Node.js](https://img.shields.io/badge/-Node.js-090909?style=for-the-badge&logo=Node.js)
+![Express.js](https://img.shields.io/badge/-Express.js-090909?style=for-the-badge&logo=Express)
+![MongoDB](https://img.shields.io/badge/-MongoDB-090909?style=for-the-badge&logo=MongoDB)
 
 ## Основные директории:
 * `/routes` — папка с файлами роутера
