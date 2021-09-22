@@ -1,6 +1,6 @@
 const allowedCors = [
-  'https://movies-mkdirdev.nomoredomains.rocks',
-  'http://movies-mkdirdev.nomoredomains.rocks',
+  'https://movies-mkdirdev.nomoredomains.rocks/',
+  'http://movies-mkdirdev.nomoredomains.rocks/',
   'https://api.mesto-mkdirdev.nomoredomains.rocks/',
   'http://api.mesto-mkdirdev.nomoredomains.rocks/',
   'localhost:3000',
